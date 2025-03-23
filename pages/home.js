@@ -52,7 +52,7 @@ export default function HomePage() {
     return (
       <div className="container mt-5">
         <Header />
-        <h2 className="text-center mb-4">Protected Page</h2>
+        <h2 className="text-center mb-4">Welcome to ArogyaWahan Application</h2>
         {message && <p className="text-center">{message}</p>}
         {user && <p className="text-center">Welcome, {user}!</p>}
         <Footer />

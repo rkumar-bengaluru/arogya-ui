@@ -12,7 +12,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const secretKey = 'your-secret-key'; // Replace with a strong secret
-const apiUrlEndpoint = "http://98.84.97.216:8080/api"
+const apiUrlEndpoint = "http://localhost:8080/api"
 
 const users = [
   { username: 'testuser', password: bcrypt.hashSync('password', 8) },
@@ -98,7 +98,7 @@ app.prepare().then(() => {
     const { username, password } = req.body;
     
     const postDataToSend = {
-        "email": username,
+        "email_id": username,
         "password": password,
     };
     console.log(username, password)
@@ -106,7 +106,7 @@ app.prepare().then(() => {
     .then((responseData) => {
         console.log('Response:', responseData);
         res.cookie('token', responseData.token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-        res.json({ message: 'Login successful' });
+        res.json({ message: 'Login successful', user: responseData.user, role: responseData.role });
     })
     .catch((error) => {
         // Handle errors
@@ -149,6 +149,75 @@ app.prepare().then(() => {
       return res.status(401).json({ message: 'Invalid token' });
     });
   });
+
+  server.get('/api/patients', (req, res) => {
+    const authToken = req.cookies.token;
+    if (!authToken) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    getData(apiUrlEndpoint + "/patients?pageSize=30&page=1", authToken)
+    .then((responseData) => {
+      console.log('Data:', responseData);
+      res.json(responseData);
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error('An error occurred:', error);
+      return res.status(401).json({ message: 'Invalid token' });
+    });
+    
+  });
+
+  
+  server.get('/api/campaigns', (req, res) => {
+    const authToken = req.cookies.token;
+    if (!authToken) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    getData(apiUrlEndpoint + "/admin/campaigns?pageSize=30&page=1", authToken)
+    .then((responseData) => {
+      console.log('Data:', responseData);
+      res.json(responseData);
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error('An error occurred:', error);
+      return res.status(401).json({ message: 'Invalid token' });
+    });
+    
+  });
+
+  
+  server.get('/api/users', (req, res) => {
+    const authToken = req.cookies.token;
+    if (!authToken) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    getData(apiUrlEndpoint + "/admin/users?pageSize=30&page=1", authToken)
+    .then((responseData) => {
+      console.log('Data:', responseData);
+      res.json(responseData);
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error('An error occurred:', error);
+      return res.status(401).json({ message: 'Invalid token' });
+    });
+    
+  });
+
+  server.get('/api/opd', (req, res) => {
+    const authToken = req.cookies.token;
+    if (!authToken) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    res.json({"message":"ok"});
+    
+  });
+
 
   server.all('*', (req, res) => {
     return handle(req, res);

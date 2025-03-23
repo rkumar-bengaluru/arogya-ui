@@ -1,14 +1,16 @@
 import React from 'react';
+import { useState ,useEffect, useContext } from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 
+import { UserDataContext } from '.';
+
 import axios from 'axios'; // If using axios for API calls
 import { useRouter } from 'next/navigation'
-
-
 const  LogOutMenu  = () => {
   const router = useRouter()
+
   const handleLogout = async () => {
     try {
       // If your backend requires an API call for logout:
@@ -30,7 +32,7 @@ const  LogOutMenu  = () => {
 
     return (
       <>
-        {['kumar@gmail.com'].map(
+        {["@user"].map(
           (variant) => (
             <DropdownButton
               as={ButtonGroup}

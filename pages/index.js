@@ -1,18 +1,20 @@
-import { useState } from 'react';
+import { useState, createContext } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/navigation'
-
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [user, setUser] = useState(null);
   const router = useRouter()
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/login', { username, password });
+      console.log(response.data.user) 
+      setUser(response.data.user)
       setMessage(response.data.message);
       // Optionally redirect to a protected page
       router.push('/home')
